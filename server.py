@@ -14,7 +14,7 @@ def reply(user_id, msg):
     resp = requests.post(
         "https://graph.facebook.com/v2.6/me/messages?access_token=" + ACCESS_TOKEN,
         json=data)
-    print (resp.content)
+    print resp.content
 
 
 def process_message(sender, message):
