@@ -34,7 +34,7 @@ def handle_incoming_messages():
 
 def greeting(sender)
     r = requests.get("https://graph.facebook.com/v2.6/"+sender+"?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token=" + ACCESS_TOKEN)
-    message = r.json()["first_name"]
+    message = "Hola, " + r.json()["first_name"];
     reply(sender,message)
 
 if __name__ == '__main__':
