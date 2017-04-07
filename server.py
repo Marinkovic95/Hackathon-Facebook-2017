@@ -17,13 +17,18 @@ def reply(user_id, msg):
     print(resp.content)
 
 
+def process_message(sender, message):
+    words = message.split()
+    reply(sender, "tus palabras fueron: {}".format(words))
+
+
 @app.route('/', methods=['POST'])
 def handle_incoming_messages():
     data = request.json
     sender = data['entry'][0]['messaging'][0]['sender']['id']
     message = data['entry'][0]['messaging'][0]['message']['text']
-    reply(sender, "vo eri un {} aweonao".format(message))
 
+    process_message(sender, message)
     return "ok"
 
 
