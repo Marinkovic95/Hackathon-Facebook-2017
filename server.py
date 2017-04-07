@@ -7,9 +7,17 @@ ACCESS_TOKEN = "EAAbCANkytUYBADk2BrjgqsD09qoXjYfBp7ZClb4CfSP5OZA7fpUFudovmXcoLnn
 
 
 def reply(user_id, msg):
+    photo = sendpic(user_id)
     data = {
         "recipient": {"id": user_id},
-        "message": {"text": msg}
+        "message": {"text": msg,
+                    "attachment": {
+                        "type": "image",
+                        "payload": {
+                            "url": photo
+                        }
+                    }
+        }
     }
     resp = requests.post(
         "https://graph.facebook.com/v2.6/me/messages?access_token=" + ACCESS_TOKEN,
@@ -18,6 +26,8 @@ def reply(user_id, msg):
 
 
 def process_message(sender, message):
+    greeting(sender)
+    sendpic(sender)
     words = message.split()
     reply(sender, "tus palabras fueron: {}".format(words))
 
@@ -27,21 +37,20 @@ def handle_incoming_messages():
     data = request.json
     sender = data['entry'][0]['messaging'][0]['sender']['id']
     message = data['entry'][0]['messaging'][0]['message']['text']
-
-    greeting(sender)
-    sendpic(sender)
     process_message(sender, message)
     return "ok"
 
+
 def sendpic(sender):
     r = requests.get("https://graph.facebook.com/v2.6/"+sender+"?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token=" + ACCESS_TOKEN)
-    photo = r.json()["profile_pic"]
-    reply(sender,photo)
+    return r.json()["profile_pic"]
+
+
 
 def greeting(sender):
     r = requests.get("https://graph.facebook.com/v2.6/"+sender+"?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token=" + ACCESS_TOKEN)
     message = "Hola, " + r.json()["first_name"]
-    reply(sender,message)
+    reply(sender, message)
 
 if __name__ == '__main__':
     app.run(debug=True)
