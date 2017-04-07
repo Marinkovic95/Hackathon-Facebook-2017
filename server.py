@@ -28,9 +28,14 @@ def handle_incoming_messages():
     sender = data['entry'][0]['messaging'][0]['sender']['id']
     message = data['entry'][0]['messaging'][0]['message']['text']
 
+    greeting(sender)
     process_message(sender, message)
     return "ok"
 
+def greeting(sender)
+    r = requests.get("https://graph.facebook.com/v2.6/"+sender+"?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token=" + ACCESS_TOKEN)
+    message = r.json()["first_name"]
+    reply(sender,message)
 
 if __name__ == '__main__':
     app.run(debug=True)
