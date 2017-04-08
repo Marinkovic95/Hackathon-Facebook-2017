@@ -17,7 +17,7 @@ class Activity(object):
     #addMemberToActivity: string,string -> void
     #agrega un nuevo miembro a la actividad sino imprime que no se puede
     def addMemberToActivity(self, actName, memberName):
-        if len(self.activityMembers[actName]) <= self.activityLimit[actName]:
+        if len(self.activityMembers[actName]) < self.activityLimit[actName]:
             self.activityMembers[actName].append(memberName)
         else:
             print "Exceded size of activity"
