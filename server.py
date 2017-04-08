@@ -3,7 +3,7 @@ import requests
 
 app = Flask(__name__)
 
-ACCESS_TOKEN = "EAAbCANkytUYBADk2BrjgqsD09qoXjYfBp7ZClb4CfSP5OZA7fpUFudovmXcoLnnsGvSjqC8crUxPvvehtuZBdarhHwoZC3z5Gm2fTLtUJ7bQaKlCAumOepe1BfUyNNWS21px1rDYsMPgjaiEZCyzylC4C4CRVdnW6RBi7InVxBgZDZD"
+ACCESS_TOKEN = "EAAbCANkytUYBAHcOtp4HcKyJfKwdAX1X9NZCjLynZC26u0hSBvoDZAPDOIdmjf8GlcwUSCDn0eQjqfi3undSU6eFfHInckBHCLex8wG5oCsK0iwdOqT0vnKpDKBg0AMy0LOUlEkBGfzoy2iACjczPXBN3QHD0lD1UZB1hyXPygZDZD"
 
 
 def reply(user_id, msg):
@@ -25,7 +25,19 @@ def process_message(sender, message):
     reply(sender, "tus palabras fueron: {}".format(words))
 
 
-@app.route('/', methods=['POST'])
+@app.route('/', methods=['GET', 'POST'])
+def handle_request():
+    print request.method
+    if request.method == 'GET':
+        return handle_verification()
+    else:
+        return handle_incoming_messages()
+
+
+def handle_verification():
+    return request.args['hub.challenge']
+
+
 def handle_incoming_messages():
     data = request.json
     sender = data['entry'][0]['messaging'][0]['sender']['id']
@@ -61,4 +73,4 @@ def greeting(sender):
     reply(sender, message)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(port=9842, debug=True)
